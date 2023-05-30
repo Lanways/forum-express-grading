@@ -1,5 +1,5 @@
-const { Restaurant, Category, Comment, User, Favorite } = require('../models')
-const { getPagination, getOffset } = require('../helpers/pagination-helper')
+const { Restaurant, Category, Comment, User, Favorite } = require('../../models')
+const { getPagination, getOffset } = require('../../helpers/pagination-helper')
 
 
 const restaurantController = {

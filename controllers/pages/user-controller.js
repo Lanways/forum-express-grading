@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
-const { imgurFileHandler } = require('../helpers/file-helpers')
-const db = require('../models')
+const { imgurFileHandler } = require('../../helpers/file-helpers')
+const db = require('../../models')
 
 const { User, Restaurant, Comment, Favorite, Like, Followship } = db
 
