@@ -13,26 +13,12 @@ const adminController = {
       })
   },
   postRestaurant: (req, res, next) => {
-    const { name, tel, address, openingHours, description, categoryId } = req.body
-    if (!name) throw new Error('Restaurant name is required!')
-    const { file } = req
-    return imgurFileHandler(file)
-      .then(filePath => {
-        Restaurant.create({
-          name,
-          tel,
-          address,
-          openingHours,
-          description,
-          image: filePath || null,
-          categoryId
-        })
-      })
-      .then(() => {
-        req.flash('success_messages', 'restaurant was successfully created')
-        res.redirect('/admin/restaurants')
-      })
-      .catch(err => next(err))
+    adminServices.postRestaurant(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', 'restaurant was successfully created')
+      req.session.createdData = data
+      return res.redirect('/admin/restaurants')
+    })
   },
   getRestaurant: (req, res, next) => {
     Restaurant.findByPk(req.params.id, {
@@ -88,33 +74,34 @@ const adminController = {
     adminServices.deleteRestaurant(req, (err, data) => {
       if (err) return next(err)
       req.session.deleteData = data
-      return res.redirect('/admin/restaurants')})
+      return res.redirect('/admin/restaurants')
+    })
   },
   getUsers: (req, res, next) => {
     return User.findAll({ raw: true })
-  .then(users => {
-    res.render('admin/users', { users })
-  })
-  .catch(err => next(err))
-  },
-patchUser: (req, res, next) => {
-  return User.findByPk(req.params.id)
-    .then(user => {
-      if (!user) throw new Error("User didn't exist!")
-      if (user.email === 'root@example.com') {
-        req.flash('error_messages', '禁止變更 root 權限')
-        return res.redirect('back')
-      }
-      return user.update({
-        isAdmin: !user.isAdmin
+      .then(users => {
+        res.render('admin/users', { users })
       })
-    })
-    .then(() => {
-      req.flash('success_messages', '使用者權限變更成功')
-      res.redirect('/admin/users')
-    })
-    .catch(err => next(err))
-},
+      .catch(err => next(err))
+  },
+  patchUser: (req, res, next) => {
+    return User.findByPk(req.params.id)
+      .then(user => {
+        if (!user) throw new Error("User didn't exist!")
+        if (user.email === 'root@example.com') {
+          req.flash('error_messages', '禁止變更 root 權限')
+          return res.redirect('back')
+        }
+        return user.update({
+          isAdmin: !user.isAdmin
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', '使用者權限變更成功')
+        res.redirect('/admin/users')
+      })
+      .catch(err => next(err))
+  },
 
 }
 module.exports = adminController

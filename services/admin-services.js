@@ -1,4 +1,5 @@
 const { Restaurant, Category } = require('../models')
+const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const adminServices = {
   getRestaurants: (req, cb) => {
@@ -27,13 +28,13 @@ const adminServices = {
       .then((deletedRestaurant) => cb(null, { restaurant: deletedRestaurant }))
       .catch(err => cb(err))
   },
-  postRestaurant: (req, res, cb) => {
+  postRestaurant: (req, cb) => {
     const { name, tel, address, openingHours, description, categoryId } = req.body
     if (!name) throw new Error('Restaurant name is required!')
     const { file } = req
-    return imgurFileHandler(file)
+    imgurFileHandler(file)
       .then(filePath => {
-        Restaurant.create({
+        return Restaurant.create({
           name,
           tel,
           address,
@@ -44,8 +45,9 @@ const adminServices = {
         })
       })
       .then((newRestaurant) => {
-        res.cb(null, { restaurant: newRestaurant })
-      })
+        return cb(null, { restaurant: newRestaurant })
+      }
+      )
       .catch(err => cb(err))
   }
 }
