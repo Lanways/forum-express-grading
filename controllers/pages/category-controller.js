@@ -1,14 +1,11 @@
-const { Restaurant, User, Category } = require('../../models')
+const { Category } = require('../../models')
+const categoryServices = require('../../services/category-services')
+
 const categoryController = {
   getCategories: (req, res, next) => {
-    return Promise.all([
-      Category.findAll({ raw: true }),
-      req.params.id ? Category.findByPk(req.params.id, { raw: true }) : null
-    ])
-      .then(([categories, category]) => {
-        res.render('admin/categories', { categories, category })
-      })
-      .catch(err => next(err))
+    categoryServices.getCategories(req, (err, data) => {
+      err ? next(err) : res.render('admin/categories', data)
+    })
   },
   postCategory: (req, res, next) => {
     const { name } = req.body

@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs')
 
 const { User } = require('../models')
 
-const userController = {
+const userServices = {
   signUp: (req, cb) => {
     if (req.body.password != req.body.passwordCheck) throw new Error('Password do not mathc')
 
@@ -27,4 +27,4 @@ const userController = {
   }
 }
 
-module.exports = userController
+module.exports = userServices
