@@ -16,15 +16,14 @@ const categoryController = {
     })
   },
   putCategory: (req, res, next) => {
-    const { name } = req.body
-    if (!name) throw new Error('Category name is required!')
-    return Category.findByPk(req.params.id)
-      .then(category => {
-        if (!category) throw new Error("Category doesn't exist!")
-        return category.update({ name })
-      })
-      .then(() => res.redirect('/admin/categories'))
-      .catch(err => next(err))
+    categoryServices.putCategory(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', 'category was successfully update')
+      req.session.createdData = data
+      return res.redirect('/admin/categories')
+    })
+
+
   },
   deleteCategory: (req, res, next) => {
     return Category.findByPk(req.params.id)

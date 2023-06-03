@@ -10,6 +10,11 @@ const categoryController = {
     categoryServices.postCategory(req, (err, data) => {
       err ? next(err) : res.json({ status: 'success', data })
     })
+  },
+  putCategory: (req, res, next) => {
+    categoryServices.putCategory(req, (err, data) => {
+      err ? next(err) : res.json({ status: 'success', data })
+    })
   }
 }
 
