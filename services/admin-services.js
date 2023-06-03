@@ -49,7 +49,33 @@ const adminServices = {
       }
       )
       .catch(err => cb(err))
-  }
+  },
+  putRestaurant: (req, cb) => {
+    const { name, tel, address, openingHours, description, categoryId } = req.body
+    if (!req.body.name) throw new Error('Restaurant name is required!')
+
+    const { file } = req
+    return Promise.all([
+      Restaurant.findByPk(req.params.id),
+      imgurFileHandler(file)
+    ])
+      .then(([restaurant, filePath]) => {
+        if (!restaurant) throw new Error("Restaurant didn't exist!")
+        return restaurant.update({
+          name,
+          tel,
+          address,
+          openingHours,
+          description,
+          image: filePath || restaurant.image,
+          categoryId
+        })
+      })
+      .then((newRestaurant) => {
+        return cb(null, { restaurant: newRestaurant })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = adminServices

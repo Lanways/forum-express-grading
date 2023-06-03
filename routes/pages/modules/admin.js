@@ -4,11 +4,11 @@ const adminController = require('../../../controllers/pages/admin-controller')
 const categoryController = require('../../../controllers/pages/category-controller')
 const upload = require('../../../middleware/multer')
 
-router.get('/restaurants/create',
-  adminController.createRestaurant)
+router.get('/restaurants/create', adminController.createRestaurant)
+router.post('/restaurants', upload.single('image'), adminController.postRestaurant)
+router.get('/restaurants', adminController.getRestaurants)
 router.get('/restaurants/:id/edit', adminController.editRestaurant)
-router.get('/restaurants/:id',
-  adminController.getRestaurant)
+router.get('/restaurants/:id', adminController.getRestaurant)
 router.put('/restaurants/:id', upload.single('image'), adminController.putRestaurant)
 router.delete('/restaurants/:id', adminController.deleteRestaurant)
 
@@ -20,11 +20,6 @@ router.delete('/categories/:id', categoryController.deleteCategory)
 
 router.patch('/users/:id', adminController.patchUser)
 router.get('/users', adminController.getUsers)
-
-router.get('/restaurants',
-  adminController.getRestaurants)
-
-router.post('/restaurants', upload.single('image'), adminController.postRestaurant)
 
 router.use('/', (req, res) => {
   res.redirect('/admin/restaurants')
