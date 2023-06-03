@@ -1,4 +1,6 @@
 const { Category } = require('../models')
+
+
 const categoryServices = {
   getCategories: (req, cb) => {
     return Promise.all([
@@ -9,6 +11,17 @@ const categoryServices = {
       .then(([categories, category]) => {
         return cb(null, { categories, category })
       })
+      .catch(err => cb(err))
+  },
+  postCategory: (req, cb) => {
+    const { name } = req.body
+    if (!name) throw new Error('Category name is required')
+    Category.findOne({ where: { name } })
+      .then(category => {
+        if (category) throw new Error('Category already exist')
+        return Category.create({ name })
+      })
+      .then((newCategory) => cb(null, newCategory))
       .catch(err => cb(err))
   },
 }
