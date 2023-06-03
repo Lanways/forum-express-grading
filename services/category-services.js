@@ -35,6 +35,15 @@ const categoryServices = {
       .then((newCategory) => cb(null, { newCategory }))
       .catch(err => cb(err))
   },
+  deleteCategory: (req, cb) => {
+    return Category.findByPk(req.params.id)
+      .then(category => {
+        if (!category) throw new Error("Category didn't exist!")
+        return category.destroy()
+      })
+      .then((deleteCategory) => cb(null, { deleteCategory }))
+      .catch(err => cb(err))
+  }
 }
 
 module.exports = categoryServices

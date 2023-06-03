@@ -18,7 +18,7 @@ const categoryController = {
   putCategory: (req, res, next) => {
     categoryServices.putCategory(req, (err, data) => {
       if (err) return next(err)
-      req.flash('success_messages', 'category was successfully update')
+      req.flash('success_messages', 'category was successfully updated')
       req.session.createdData = data
       return res.redirect('/admin/categories')
     })
@@ -26,13 +26,12 @@ const categoryController = {
 
   },
   deleteCategory: (req, res, next) => {
-    return Category.findByPk(req.params.id)
-      .then(category => {
-        if (!category) throw new Error("Category didn't exist!")
-        return category.destroy()
-      })
-      .then(() => res.redirect('/admin/categories'))
-      .catch(err => next(err))
+    categoryServices.deleteCategory(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', 'category was successfully deleted')
+      req.session.createdData = data
+      return res.redirect('/admin/categories')
+    })
   }
 }
 
