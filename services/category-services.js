@@ -43,7 +43,7 @@ const categoryServices = {
       })
       .then((deleteCategory) => cb(null, { deleteCategory }))
       .catch(err => cb(err))
-  }
+  },
 }
 
 module.exports = categoryServices

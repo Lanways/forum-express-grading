@@ -4,6 +4,7 @@ const adminController = require('../../../controllers/apis/admin-controller')
 const categoryController = require('../../../controllers/apis/category-controller')
 const upload = require('../../../middleware/multer')
 
+router.get('/restaurants/create', adminController.createRestaurant)
 router.get('/restaurants', adminController.getRestaurants)
 router.post('/restaurants', upload.single('image'), adminController.postRestaurant)
 router.put('/restaurants/:id', upload.single('image'), adminController.putRestaurant)
