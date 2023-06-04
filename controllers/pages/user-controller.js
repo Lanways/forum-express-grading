@@ -1,7 +1,3 @@
-
-const db = require('../../models')
-
-const { User, Restaurant, Comment, Favorite, Like, Followship } = db
 const userServices = require('../../services/user-services')
 
 const userController = {
