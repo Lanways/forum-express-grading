@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 
-const { User, Comment, Restaurant, Favorite, Like } = require('../models')
+const { User, Comment, Restaurant, Favorite, Like, Followship } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
 const userServices = {
   signUp: (req, cb) => {
@@ -173,6 +173,28 @@ const userServices = {
         users = users.sort((a, b) => b.followerCount - a.followerCount)
         return cb(null, { users })
       })
+      .catch(err => cb(err))
+  },
+  addFollowing: (req, cb) => {
+    const { userId } = req.params
+    Promise.all([
+      User.findByPk(userId),
+      Followship.findOne({
+        where: {
+          followerId: req.user.id,
+          followingId: req.params.userId
+        }
+      })
+    ])
+      .then(([user, followship]) => {
+        if (!user) throw new Error("User didn't exist!")
+        if (followship) throw new Error('You are already following this user!')
+        return Followship.create({
+          followerId: req.user.id,
+          followingId: userId
+        })
+      })
+      .then(() => cb(null))
       .catch(err => cb(err))
   },
 }

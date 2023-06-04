@@ -62,5 +62,10 @@ const userController = {
       err ? next(err) : res.json({ status: "success", data })
     })
   },
+  addFollowing: (req, res, next) => {
+    userServices.addFollowing(req, (err) => {
+      err ? next(err) : res.json({ status: "success" })
+    })
+  },
 }
 module.exports = userController
