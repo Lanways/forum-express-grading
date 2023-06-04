@@ -56,9 +56,6 @@ const adminController = {
       req.session.createdData = data
       res.redirect('/admin/users')
     })
-
-
-
   },
 
 }

@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 
-const { User } = require('../models')
+const { User, Comment, Restaurant } = require('../models')
 
 const userServices = {
   signUp: (req, cb) => {
@@ -24,7 +24,27 @@ const userServices = {
         return cb(null, { user })
       })
       .catch(err => cb(err))
-  }
+  },
+  getUser: (req, cb) => {
+    return Promise.all([
+      User.findByPk(req.params.id),
+      Comment.findAll({
+        raw: true,
+        nest: true,
+        where: {
+          userId: req.params.id
+        },
+        include: [Restaurant]
+      })
+    ])
+      .then(([user, comments]) => {
+        if (!user) throw new Error(`User didn't exist`)
+        user = user.toJSON()
+        delete user.password
+        return cb(null, { user, comments })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices

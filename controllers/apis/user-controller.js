@@ -21,6 +21,11 @@ const userController = {
     userServices.signUp(req, (err, data) => {
       err ? next(err) : res.json({ status: 'success', data })
     })
-  }
+  },
+  getUser: (req, res, next) => {
+    userServices.getUser(req, (err, data) => {
+      err ? next(err) : res.json({ status: "success", data })
+    })
+  },
 }
 module.exports = userController
