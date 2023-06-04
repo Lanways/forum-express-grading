@@ -197,6 +197,20 @@ const userServices = {
       .then(() => cb(null))
       .catch(err => cb(err))
   },
+  removeFollowing: (req, cb) => {
+    Followship.findOne({
+      where: {
+        followerId: req.user.id,
+        followingId: req.params.userId
+      }
+    })
+      .then(followship => {
+        if (!followship) throw new Error("You haven't followed this user!")
+        return followship.destroy()
+      })
+      .then(() => cb(null))
+      .catch(err => cb(err))
+  }
 }
 
 module.exports = userServices

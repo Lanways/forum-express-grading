@@ -79,18 +79,9 @@ const userController = {
     })
   },
   removeFollowing: (req, res, next) => {
-    Followship.findOne({
-      where: {
-        followerId: req.user.id,
-        followingId: req.params.userId
-      }
+    userServices.removeFollowing(req, (err) => {
+      err ? next(err) : res.redirect('back')
     })
-      .then(followship => {
-        if (!followship) throw new Error("You haven't followed this user!")
-        return followship.destroy()
-      })
-      .then(() => res.redirect('back'))
-      .catch(err => next(err))
   }
 }
 
