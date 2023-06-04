@@ -27,6 +27,11 @@ const adminController = {
       err ? next(err) : res.json({ status: "success", data })
     })
   },
+  editRestaurant: (req, res, next) => {
+    adminServices.editRestaurant(req, (err, data) => {
+      err ? next(err) : res.json({ status: "success", data })
+    })
+  },
 }
 
 module.exports = adminController

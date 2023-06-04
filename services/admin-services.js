@@ -93,6 +93,17 @@ const adminServices = {
       })
       .catch(err => cb(err))
   },
+  editRestaurant: (req, cb) => {
+    return Promise.all([
+      Restaurant.findByPk(req.params.id, { raw: true }),
+      Category.findAll({ raw: true })
+    ])
+      .then(([restaurant, categories]) => {
+        if (!restaurant) throw new Error(`Restaurant doesn't exist!`)
+        return cb(null, { restaurant, categories })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = adminServices
