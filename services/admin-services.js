@@ -1,4 +1,4 @@
-const { Restaurant, Category } = require('../models')
+const { Restaurant, Category, User } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const adminServices = {
@@ -101,6 +101,18 @@ const adminServices = {
       .then(([restaurant, categories]) => {
         if (!restaurant) throw new Error(`Restaurant doesn't exist!`)
         return cb(null, { restaurant, categories })
+      })
+      .catch(err => cb(err))
+  },
+  getUsers: (req, cb) => {
+    return User.findAll()
+      .then(users => {
+        users = users.map(user => {
+          user = user.toJSON()
+          delete user.password
+          return user
+        })
+        return cb(null, { users })
       })
       .catch(err => cb(err))
   },
