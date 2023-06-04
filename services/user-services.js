@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 
-const { User, Comment, Restaurant } = require('../models')
+const { User, Comment, Restaurant, Favorite } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
 const userServices = {
   signUp: (req, cb) => {
@@ -76,6 +76,29 @@ const userServices = {
         delete updatedUser.password
         return cb(null, { updatedUser })
       })
+      .catch(err => cb(err))
+  },
+  addFavorite: (req, cb) => {
+    const { restaurantId } = req.params
+    return Promise.all([
+      Restaurant.findByPk(restaurantId),
+      Favorite.findOne({
+        where: {
+          userId: req.user.id,
+          restaurantId
+        }
+      })
+    ])
+      .then(([restaurant, favorite]) => {
+        if (!restaurant) throw new Error(`Restaurant didn't exist!`)
+        if (favorite) throw new Error(`You have favorited this restaurant!`)
+
+        return Favorite.create({
+          userId: req.user.id,
+          restaurantId
+        })
+      })
+      .then((updateFavorite) => cb(null, { updateFavorite }))
       .catch(err => cb(err))
   },
 }
