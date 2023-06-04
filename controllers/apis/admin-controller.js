@@ -37,6 +37,11 @@ const adminController = {
       err ? next(err) : res.json({ status: "success", data })
     })
   },
+  patchUser: (req, res, next) => {
+    adminServices.patchUser(req, (err, data) => {
+      err ? next(err) : res.json({ status: "success", data })
+    })
+  },
 }
 
 module.exports = adminController

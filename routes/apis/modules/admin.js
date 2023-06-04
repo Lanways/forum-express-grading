@@ -18,6 +18,6 @@ router.put('/categories/:id', categoryController.putCategory)
 router.delete('/categories/:id', categoryController.deleteCategory)
 
 router.get('/users', adminController.getUsers)
-
+router.patch('/users/:id', adminController.patchUser)
 
 module.exports = router
