@@ -47,5 +47,10 @@ const userController = {
       err ? next(err) : res.json({ status: "success", data })
     })
   },
+  addLike: (req, res, next) => {
+    userServices.addLike(req, (err) => {
+      err ? next(err) : res.json({ status: "success" })
+    })
+  },
 }
 module.exports = userController
