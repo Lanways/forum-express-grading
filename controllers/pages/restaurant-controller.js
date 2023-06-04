@@ -21,22 +21,9 @@ const restaurantController = {
     })
   },
   getTopRestaurants: (req, res, next) => {
-    return Restaurant.findAll({
-      include: [
-        { model: User, as: 'FavoritedUsers' }
-      ]
+    restaurantServices.getTopRestaurants(req, (err, data) => {
+      err ? next(err) : res.render('top-restaurants', data)
     })
-      .then(restaurants => {
-        const result = restaurants.map(restaurant => ({
-          ...restaurant.toJSON(),
-          favoritedCount: restaurant.FavoritedUsers.length,
-          isFavorited: req.user && req.user.FavoritedRestaurants.some(f => f.id === restaurant.id)
-        }))
-          .sort((a, b) => b.favoritedCount - a.favoritedCount)
-          .slice(0, 10)
-        res.render('top-restaurants', { restaurants: result })
-      })
-      .catch(err => next(err))
   }
 }
 module.exports = restaurantController
