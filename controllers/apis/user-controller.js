@@ -57,5 +57,10 @@ const userController = {
       err ? next(err) : res.json({ status: "success" })
     })
   },
+  getTopUsers: (req, res, next) => {
+    userServices.getTopUsers(req, (err, data) => {
+      err ? next(err) : res.json({ status: "success", data })
+    })
+  },
 }
 module.exports = userController

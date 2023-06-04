@@ -152,6 +152,29 @@ const userServices = {
       .then(() => cb(null))
       .catch(err => cb(err))
   },
+  getTopUsers: (req, cb) => {
+    return User.findAll({
+      include: [{ model: User, as: 'Followers' }]
+    })
+      .then(users => {
+        users = users.map(user => {
+          let userData = user.toJSON()
+          delete userData.password
+          userData.Followers = userData.Followers.map(follower => {
+            delete follower.password
+            return follower
+          })
+          return {
+            ...userData,
+            followerCount: user.Followers.length,
+            isFollowed: req.user.Followings.some(f => f.id === user.id)
+          }
+        })
+        users = users.sort((a, b) => b.followerCount - a.followerCount)
+        return cb(null, { users })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices

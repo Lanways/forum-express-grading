@@ -14,6 +14,8 @@ router.post('/signup', userController.signUp)
 router.post('/signin', passport.authenticate('local',
   { session: false }), userController.signIn)
 
+
+router.get('/users/top', authenticated, userController.getTopUsers)
 router.get('/restaurants', authenticated, restController.getRestaurants)
 
 router.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
