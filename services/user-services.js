@@ -138,6 +138,20 @@ const userServices = {
       .then(() => cb(null))
       .catch(err => cb(err))
   },
+  removeLike: (req, cb) => {
+    return Like.findOne({
+      where: {
+        userId: req.user.id,
+        restaurantId: req.params.restaurantId
+      }
+    })
+      .then(like => {
+        if (!like) throw new Error("You haven't liked this restaurant")
+        return like.destroy()
+      })
+      .then(() => cb(null))
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices

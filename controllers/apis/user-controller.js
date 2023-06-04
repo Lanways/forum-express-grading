@@ -52,5 +52,10 @@ const userController = {
       err ? next(err) : res.json({ status: "success" })
     })
   },
+  removeLike: (req, res, next) => {
+    userServices.removeLike(req, (err) => {
+      err ? next(err) : res.json({ status: "success" })
+    })
+  },
 }
 module.exports = userController

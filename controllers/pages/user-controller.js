@@ -1,10 +1,8 @@
-const bcrypt = require('bcryptjs')
-const { imgurFileHandler } = require('../../helpers/file-helpers')
+
 const db = require('../../models')
 
 const { User, Restaurant, Comment, Favorite, Like, Followship } = db
 const userServices = require('../../services/user-services')
-const { date } = require('faker/lib/locales/ar')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -66,18 +64,9 @@ const userController = {
     })
   },
   removeLike: (req, res, next) => {
-    return Like.findOne({
-      where: {
-        userId: req.user.id,
-        restaurantId: req.params.restaurantId
-      }
+    userServices.removeLike(req, (err) => {
+      err ? next(err) : res.redirect('back')
     })
-      .then(like => {
-        if (!like) throw new Error("You haven't liked this restaurant")
-        return like.destroy()
-      })
-      .then(() => res.redirect('back'))
-      .catch(err => next(err))
   },
   getTopUsers: (req, res, next) => {
     return User.findAll({
