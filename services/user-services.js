@@ -45,6 +45,16 @@ const userServices = {
       })
       .catch(err => cb(err))
   },
+  editUser: (req, cb) => {
+    return User.findByPk(req.params.id)
+      .then(user => {
+        if (!user) throw new Error(`User didn't exist`)
+        user = user.toJSON()
+        delete user.password
+        return cb(null, { user })
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices

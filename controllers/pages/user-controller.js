@@ -36,12 +36,9 @@ const userController = {
     })
   },
   editUser: (req, res, next) => {
-    return User.findByPk(req.params.id, { raw: true })
-      .then(user => {
-        if (!user) throw new Error(`User didn't exist`)
-        res.render('users/edit', { user })
-      })
-      .catch(err => next(err))
+    userServices.editUser(req, (err, data) => {
+      err ? next(err) : res.render('users/edit', data)
+    })
   },
   putUser: (req, res, next) => {
     const { name } = req.body
