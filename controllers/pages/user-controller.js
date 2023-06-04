@@ -4,7 +4,7 @@ const db = require('../../models')
 
 const { User, Restaurant, Comment, Favorite, Like, Followship } = db
 const userServices = require('../../services/user-services')
-const { date } = require('faker/lib/locales/az')
+const { date } = require('faker/lib/locales/ar')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -41,26 +41,12 @@ const userController = {
     })
   },
   putUser: (req, res, next) => {
-    const { name } = req.body
-    const { file } = req
-    if (!name) throw new Error('User name is required')
-    return Promise.all([
-      User.findByPk(req.user.id),
-      imgurFileHandler(file)
-    ])
-      .then(([user, filePath]) => {
-        if (!user) throw new Error("User didn't exist!")
-        if (user.id !== Number(req.params.id)) throw new Error('Edit self profile only!')
-        return user.update({
-          name,
-          image: filePath || user.image
-        })
-      })
-      .then(() => {
-        req.flash('success_messages', '使用者資料編輯成功')
-        res.redirect(`/users/${req.user.id}`)
-      })
-      .catch(err => next(err))
+    userServices.putUser(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', '使用者資料編輯成功')
+      req.session.createData = data
+      res.redirect(`/users/${req.user.id}`)
+    })
   },
   addFavorite: (req, res, next) => {
     const { restaurantId } = req.params

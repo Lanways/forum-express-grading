@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 
 const { User, Comment, Restaurant } = require('../models')
-
+const { imgurFileHandler } = require('../helpers/file-helpers')
 const userServices = {
   signUp: (req, cb) => {
     if (req.body.password != req.body.passwordCheck) throw new Error('Password do not mathc')
@@ -52,6 +52,29 @@ const userServices = {
         user = user.toJSON()
         delete user.password
         return cb(null, { user })
+      })
+      .catch(err => cb(err))
+  },
+  putUser: (req, cb) => {
+    const { name } = req.body
+    const { file } = req
+    if (!name) throw new Error('User name is required')
+    return Promise.all([
+      User.findByPk(req.user.id),
+      imgurFileHandler(file)
+    ])
+      .then(([user, filePath]) => {
+        if (!user) throw new Error("User didn't exist!")
+        if (user.id !== Number(req.params.id)) throw new Error('Edit self profile only!')
+        return user.update({
+          name,
+          image: filePath || user.image
+        })
+      })
+      .then((updatedUser) => {
+        updatedUser = updatedUser.toJSON()
+        delete updatedUser.password
+        return cb(null, { updatedUser })
       })
       .catch(err => cb(err))
   },
