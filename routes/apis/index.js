@@ -17,6 +17,7 @@ router.post('/signin', passport.authenticate('local',
 router.get('/restaurants', authenticated, restController.getRestaurants)
 
 router.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+router.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
 router.get('/users/:id/edit', authenticated, userController.editUser)
 router.get('/users/:id', authenticated, userController.getUser)

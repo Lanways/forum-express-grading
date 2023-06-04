@@ -45,7 +45,7 @@ const userController = {
       if (err) return next(err)
       req.flash('success_messages', '使用者資料編輯成功')
       req.session.createData = data
-      res.redirect(`/users/${req.user.id}`)
+      return res.redirect(`/users/${req.user.id}`)
     })
   },
   addFavorite: (req, res, next) => {
@@ -54,18 +54,11 @@ const userController = {
     })
   },
   removeFavorite: (req, res, next) => {
-    return Favorite.findOne({
-      where: {
-        userId: req.user.id,
-        restaurantId: req.params.restaurantId
-      }
+    userServices.removeFavorite(req, (err, data) => {
+      if (err) return next(err)
+      req.session.createData = data
+      return res.redirect('back')
     })
-      .then((favorite) => {
-        if (!favorite) throw new Error(`You haven't favorited this restaurant`)
-        return favorite.destroy()
-      })
-      .then(() => res.redirect('back'))
-      .catch(err => next(err))
   },
   addLike: (req, res, next) => {
     const { restaurantId } = req.params

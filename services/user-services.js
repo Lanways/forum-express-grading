@@ -101,6 +101,20 @@ const userServices = {
       .then((updateFavorite) => cb(null, { updateFavorite }))
       .catch(err => cb(err))
   },
+  removeFavorite: (req, cb) => {
+    return Favorite.findOne({
+      where: {
+        userId: req.user.id,
+        restaurantId: req.params.restaurantId
+      }
+    })
+      .then((favorite) => {
+        if (!favorite) throw new Error(`You haven't favorited this restaurant`)
+        return favorite.destroy()
+      })
+      .then((deletedFavorite) => cb(null, { deletedFavorite }))
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = userServices
