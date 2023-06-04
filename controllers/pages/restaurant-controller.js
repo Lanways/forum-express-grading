@@ -11,28 +11,9 @@ const restaurantController = {
     })
   },
   getDashboard: (req, res, next) => {
-    return Promise.all([
-      Restaurant.findByPk(req.params.id, {
-        include: Category,
-        nest: true,
-        raw: true
-      }),
-      Comment.findAll({
-        where: {
-          restaurantId: req.params.id
-        }
-      }),
-      Favorite.findAll({
-        where: {
-          restaurantId: req.params.id
-        }
-      })
-    ])
-      .then(([restaurant, comments, favorites]) => {
-        if (!restaurant) throw new Error("Restaurant didn't exist!")
-        res.render('dashboard', { restaurant, comments, favorites })
-      })
-      .catch(err => next(err))
+    restaurantServices.getDashboard(req, (err, data) => {
+      err ? next(err) : res.render('dashboard', data)
+    })
   },
   getFeeds: (req, res, next) => {
     return Promise.all([
