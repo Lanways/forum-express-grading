@@ -1,4 +1,3 @@
-const { User, Restaurant, Comment } = require('../../models')
 const commentServices = require('../../services/comment-services')
 const commentController = {
   postComment: (req, res, next) => {
@@ -7,15 +6,9 @@ const commentController = {
     })
   },
   deleteComment: (req, res, next) => {
-    return Comment.findByPk(req.params.id)
-      .then(comment => {
-        if (!comment) throw new Error(`Comment didn't exist!`)
-        return comment.destroy()
-      })
-      .then(deletedComent => {
-        // console.log(deletedComent)
-        res.redirect(`/restaurants/${deletedComent.restaurantId}`)
-      })
+    commentServices.deleteComment(req, (err, data) => {
+      err ? next(err) : res.redirect(`/restaurants/${data.restaurantId}`, data)
+    })
   }
 }
 
